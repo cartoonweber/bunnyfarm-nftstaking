@@ -1,0 +1,7 @@
+{
+    "STAKING_CONTRACT_ADDRESS": "0x51C1cC3ca62F617eAeaa7a7eA1A9e20BE0B3F0a1",
+    "NFT_CONTRACT": "0xE27934fB3683872e35b8d9E57c30978e1260c614",
+    "NETWORK_ID": 20, 
+    "BLOCKCHAIN_EXPLORER": "https://esc.elastos.io/",
+    "NETWORK" : "Elastos Smart Chain" 
+}

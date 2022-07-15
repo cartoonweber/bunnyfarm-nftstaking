@@ -11,6 +11,8 @@ import LoadingComponent from "../../components/LoadingComponent"
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import useNFTInfo from "../../hooks/useNFTInfo"
+import useFetchLockData from "../../hooks/useFetchLockData"
 
 const MySwal = withReactContent(Swal)
 
@@ -43,15 +45,21 @@ const style3 = {
 const Stake = () => {
     const { account, web3Provider } = useContext(GlobalContext)
     const [fetchNFTs, setFetchNfts] = useState(true)
-    const nfts = useFetchNFT(web3Provider, account, fetchNFTs, setFetchNfts)
-    const stNfts = useStakedNFT(web3Provider, account, fetchNFTs, setFetchNfts)
+    const [totalReward, setTotalReward] = useState(0);
     const [selectedPeriod, setSelectedPeriod] = useState(0);
     const [loading, setLoading] = useState(false)
     const [selectedNFTs, setSelectedNFTs] = useState([])
     const [selectedStNFTs, setSelectedStNFTs] = useState([])
 
+    const lockdata = useFetchLockData();
+    const nfts = useFetchNFT(web3Provider, account, fetchNFTs, setFetchNfts)
+    const stNfts = useStakedNFT(web3Provider, account, fetchNFTs, setFetchNfts)
+    const nftInfos = useNFTInfo(web3Provider, stNfts, lockdata, selectedStNFTs, setTotalReward);
 
-    console.log(stNfts)
+
+    const [showdetails, setShowDetails] = useState([]);
+
+    console.log(nftInfos);
     const checkBoxClick = (e, tokenId) => {
         console.log(parseInt(tokenId, 16))
         const imageDisplay = e.target.querySelector('img').style.display;
@@ -288,29 +296,78 @@ const Stake = () => {
                         stNfts.map((nft, i) => {
                             if (i < stNfts.length - 1) {
                                 return (
-                                    <div key={i} className="nft-row">
-                                        <div className="check-box-holder" onClick={e => checkBoxClickStaked(e, nft)}><img src="images/tick.svg" style={{ pointerEvents: "none", display: "none" }} loading="lazy" alt="" className="image-tick" /></div>
-                                        <div className="nft-image"><img src="images/coffen.png" loading="lazy" width="55" alt="" className="image-16" /></div>
-                                        <div className="nft-id">Bunny #{nft.toString()}</div>
-                                        {/* <div className="staked-info">
+                                    <div className="nft-row">
+                                        <div key={i} className={'nft-row-panel'}>
+
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <div className="check-box-holder" onClick={e => checkBoxClickStaked(e, nft)}><img src="images/tick.svg" style={{ pointerEvents: "none", display: "none" }} loading="lazy" alt="" className="image-tick" /></div>
+                                                <div className="nft-image"><img src="images/coffen.png" loading="lazy" width="55" alt="" className="image-16" /></div>
+                                                <div className="nft-id">Bunny #{nft.toString()}</div>
+                                                {/* <div className="staked-info">
                                             <div className="staked-for">STAKED FOR 30 days</div>
                                             <div className="earning">earning 5%</div>
                                         </div> */}
-                                        <div className="white-detail-line"></div>
+                                                <div className="white-detail-line"></div>
+                                            </div>
+                                            <div style={{ color: 'white', fontFamily: 'Chakra Petch', cursor: 'pointer' }}
+                                                onClick={() => {
+                                                    let temp = [...showdetails];
+                                                    temp[i] = !temp[i];
+                                                    setShowDetails(temp);
+                                                }}>Details</div>
+                                        </div>
+                                        <div style={{ fontFamily: 'Chakra Petch', color: 'white', width: '100%', display: showdetails[i] ? 'block' : 'none', fontSize: '14px', lineHeight: '28px' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                                Lock Days : {nftInfos ? nftInfos[i].periodValue : 0} days
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                                APR : {nftInfos ? Number(nftInfos[i].apr).toFixed(2) : 0}%
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                                Total Reward : {nftInfos ? Number(nftInfos[i].reward).toFixed(4) : 0} Bunny
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'end', marginTop: '-5px', fontSize: '12px', fontWeight: '600', color: nftInfos && nftInfos.withdrawable ? '#00c851' : '#ff4444' }}>
+                                                {nftInfos && nftInfos.withdrawable ? 'Lock days is expired' : 'Lock days is not expired'}
+                                            </div>
+                                        </div>
                                     </div>
                                 )
                             } else {
                                 return (
-                                    <div key={i} className="nft-row last">
-                                        <div className="check-box-holder" onClick={e => checkBoxClickStaked(e, nft)}><img src="images/tick.svg" style={{ pointerEvents: "none", display: "none" }} loading="lazy" alt="" className="image-tick" /></div>
-                                        <div className="nft-image"><img src="images/coffen.png" loading="lazy" width="55" alt="" /></div>
-                                        <div className="nft-id">Bunny #{nft.toString()}</div>
-                                        {/* <div className="staked-info">
+                                    <div className="nft-row last">
+                                        <div key={i} className={'nft-row-panel'}>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <div className="check-box-holder" onClick={e => checkBoxClickStaked(e, nft)}><img src="images/tick.svg" style={{ pointerEvents: "none", display: "none" }} loading="lazy" alt="" className="image-tick" /></div>
+                                                <div className="nft-image"><img src="images/coffen.png" loading="lazy" width="55" alt="" /></div>
+                                                <div className="nft-id">Bunny #{nft.toString()}</div>
+                                                {/* <div className="staked-info">
                                             <div className="staked-for">STAKED FOR 30 days</div>
                                             <div className="earning">earning 5%</div>
                                         </div> */}
-                                        <div className="white-detail-line"></div>
-                                        <div className="white-detail-line bottom"></div>
+                                                <div className="white-detail-line"></div>
+                                                <div className="white-detail-line bottom"></div>
+                                            </div>
+                                            <div style={{ color: 'white', fontFamily: 'Chakra Petch', cursor: 'pointer' }}
+                                                onClick={() => {
+                                                    let temp = [...showdetails];
+                                                    temp[i] = !temp[i];
+                                                    setShowDetails(temp);
+                                                }}>Details</div>
+                                        </div>
+                                        <div style={{ fontFamily: 'Chakra Petch', color: 'white', width: '100%', display: showdetails[i] ? 'block' : 'none', fontSize: '14px', lineHeight: '28px' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                                Lock Days : {nftInfos ? nftInfos[i].periodValue : 0} days
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                                APR : {nftInfos ? Number(nftInfos[i].apr).toFixed(2) : 0}%
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                                Total Reward : {nftInfos ? Number(nftInfos[i].reward).toFixed(4) : 0} Bunny
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'end', marginTop: '-5px', fontSize: '12px', fontWeight: '600', color: nftInfos && nftInfos.withdrawable ? '#00c851' : '#ff4444' }}>
+                                                {nftInfos && nftInfos.withdrawable ? 'Lock days is expired' : 'Lock days is not expired'}
+                                            </div>
+                                        </div>
                                     </div>
                                 )
                             }
@@ -324,7 +381,9 @@ const Stake = () => {
                         )
                     }
 
-
+                    <div style={{ display: 'flex', justifyContent: 'end', color: 'white', width: '100%', marginTop: '20px', fontFamily: 'Chakra Petch' }}>
+                        Total Earnings : {Number(totalReward).toFixed(4)} Bunny
+                    </div>
                 </div>
             </section>
             <footer data-w-id="1c6363c1-60a3-5681-8671-51603099bdca" style={{ opacity: 0 }} className="footer stake wf-section">
@@ -333,16 +392,16 @@ const Stake = () => {
                     <div className="typo-stake-period">choose staking period in days</div>
                     <div className="button-days-holder">
                         <div className={classNames('button-nav-small days', { 'active': selectedPeriod == 0 })} onClick={e => setSelectedPeriod(0)}>
-                            <div className="typo-days">30</div>
+                            <div className="typo-days">{lockdata ? lockdata[0][0] / 1 : 0}</div>
                         </div>
                         <div className={classNames('button-nav-small days', { 'active': selectedPeriod == 1 })} onClick={e => setSelectedPeriod(1)}>
-                            <div className="typo-days">60</div>
+                            <div className="typo-days">{lockdata ? lockdata[1][0] / 1 : 0}</div>
                         </div>
                         <div className={classNames('button-nav-small days', { 'active': selectedPeriod == 2 })} onClick={e => setSelectedPeriod(2)}>
-                            <div className="typo-days">90</div>
+                            <div className="typo-days">{lockdata ? lockdata[2][0] / 1 : 0}</div>
                         </div>
                         <div className={classNames('button-nav-small days', { 'active': selectedPeriod == 3 })} onClick={e => setSelectedPeriod(3)}>
-                            <div className="typo-days">120</div>
+                            <div className="typo-days">{lockdata ? lockdata[3][0] / 1 : 0}</div>
                         </div>
                     </div>
                     <a data-w-id="e2b7a820-35a6-06f6-ec66-f0b4a902d6fc" style={{ opacity: 0 }} href="#" className="button-stake w-button" onClick={checkApproval}>STAKE MY NFTs</a>
@@ -385,16 +444,16 @@ const Stake = () => {
                 <div className="typo-stake-period">choose staking period in days</div>
                 <div className="button-days-holder">
                     <div className={classNames('button-nav-small days', { 'active': selectedPeriod == 0 })} onClick={e => setSelectedPeriod(0)}>
-                        <div className="typo-days">30</div>
+                        <div className="typo-days">{lockdata ? lockdata[0][0] / 1 : 0}</div>
                     </div>
                     <div className={classNames('button-nav-small days', { 'active': selectedPeriod == 1 })} onClick={e => setSelectedPeriod(1)}>
-                        <div className="typo-days">60</div>
+                        <div className="typo-days">{lockdata ? lockdata[1][0] / 1 : 0}</div>
                     </div>
                     <div className={classNames('button-nav-small days', { 'active': selectedPeriod == 2 })} onClick={e => setSelectedPeriod(2)}>
-                        <div className="typo-days">90</div>
+                        <div className="typo-days">{lockdata ? lockdata[2][0] / 1 : 0}</div>
                     </div>
                     <div className={classNames('button-nav-small days', { 'active': selectedPeriod == 3 })} onClick={e => setSelectedPeriod(3)}>
-                        <div className="typo-days">120</div>
+                        <div className="typo-days">{lockdata ? lockdata[3][0] / 1 : 0}</div>
                     </div>
                 </div>
                 <a data-w-id="e7892a29-86dd-8960-fe68-2193ff2d4865" style={{ opacity: 0 }} href="#" className="button-stake w-button" onClick={checkApproval}>STAKE MY NFTs</a>

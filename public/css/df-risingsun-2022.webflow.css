@@ -2753,6 +2753,7 @@ a {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  flex-direction: column;
   padding-top: 10px;
   padding-bottom: 10px;
   -webkit-box-align: center;
@@ -2769,6 +2770,12 @@ a {
   border-bottom: 1px solid rgba(241, 172, 93, 0.5);
 }
 
+.nft-row-panel{
+  display : flex;
+  justify-content: space-between;
+  align-items: center;
+  width : 100%;
+}
 .check-box-holder {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2816,6 +2823,15 @@ a {
   align-items: center;
   -webkit-perspective: 1000px;
   perspective: 1000px;
+}
+
+@media screen and (max-width : 500px){
+  .nft-image{
+    width : 50px!important;
+    height : 50px!important;
+    min-width : 50px!important;
+    min-height : 50px!important;
+  }
 }
 
 .nft-id {

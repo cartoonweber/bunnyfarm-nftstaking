@@ -7,25 +7,25 @@ import { GlobalContext } from '../../context/GlobalContext';
 const providerOptions = {
     cacheProvider: false,
     walletconnect: {
-      package: WalletConnectProvider,
-      options: {
-        rpc: {
-          20: 'https://api.elastos.io/eth'
+        package: WalletConnectProvider,
+        options: {
+            rpc: {
+                20: 'https://api.elastos.io/eth'
+            },
+            chainID: 1
         },
-        chainID: 1
-      },
     },
-  };
+};
 
-  
+
 const Header = () => {
     const { account, delAccount, updateProvider } = useContext(GlobalContext);
 
     const onDisconnect = async () => {
         const web3modal = new Web3Modal({
             providerOptions
-          });
-          
+        });
+
         const clear = await web3modal.clearCachedProvider();
         window.localStorage.clear();
 
@@ -93,6 +93,10 @@ const Header = () => {
                         <a href="https://www.risingsuncoin.io/why-us" className="link-mobile-nav mid">why us</a>
                         <a href="https://assets.website-files.com/623ce2bcd0ab4f85b6e43d32/628590c0bfb7b073ad413b70_RisingSun-Whitepaper.pdf" target="_blank" className="link-mobile-nav mid">whitepaper</a>
                         <a href="https://assets.website-files.com/623ce2bcd0ab4f85b6e43d32/628590bf02d01e693dafb9ee_RisingSun-audit-report.pdf" target="_blank" className="link-mobile-nav">audit report</a>
+                        <div className="button-nav-big w-inline-block" style={{ cursor: 'pointer', margin: '10px 0px', display : 'flex' }} onClick={() => onDisconnect()}>
+                            <div className="image-star"><img src="images/fox.svg" loading="lazy" alt="" /></div>
+                            <div className="typo-buysun">DISCONNECT</div>
+                        </div>
                     </div>
                     <div className="social-mobile-nav">
                         <p className="typo-nav-mobile">FOLLOW US AND JOIN THE CLUB</p>

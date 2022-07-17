@@ -318,16 +318,16 @@ const Stake = () => {
                                         </div>
                                         <div style={{ fontFamily: 'Chakra Petch', color: 'white', width: '100%', display: showdetails[i] ? 'block' : 'none', fontSize: '14px', lineHeight: '28px' }}>
                                             <div style={{ display: 'flex', justifyContent: 'end' }}>
-                                                Lock Days : {nftInfos ? nftInfos[i].periodValue : 0} days
+                                                Lock Days : {nftInfos && nftInfos[i] ? nftInfos[i].periodValue : 0} days
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'end' }}>
-                                                APR : {nftInfos ? Number(nftInfos[i].apr).toFixed(2) : 0}%
+                                                APR : {nftInfos && nftInfos[i] ? Number(nftInfos[i].apr).toFixed(2) : 0}%
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'end' }}>
-                                                Total Reward : {nftInfos ? Number(nftInfos[i].reward).toFixed(4) : 0} Bunny
+                                                Total Reward : {nftInfos && nftInfos[i] ? Number(nftInfos[i].reward).toFixed(4) : 0} Bunny
                                             </div>
-                                            <div style={{ display: 'flex', justifyContent: 'end', marginTop: '-5px', fontSize: '12px', fontWeight: '600', color: nftInfos && nftInfos.withdrawable ? '#00c851' : '#ff4444' }}>
-                                                {nftInfos && nftInfos.withdrawable ? 'Lock days is expired' : 'Lock days is not expired'}
+                                            <div style={{ display: 'flex', justifyContent: 'end', marginTop: '-5px', fontSize: '12px', fontWeight: '600', color: nftInfos && nftInfos[i] && nftInfos[i].withdrawable ? '#00c851' : '#ff4444' }}>
+                                                {nftInfos && nftInfos[i] && nftInfos[i].withdrawable ? 'Lock days is expired' : 'Lock days is not expired'}
                                             </div>
                                         </div>
                                     </div>
@@ -356,16 +356,16 @@ const Stake = () => {
                                         </div>
                                         <div style={{ fontFamily: 'Chakra Petch', color: 'white', width: '100%', display: showdetails[i] ? 'block' : 'none', fontSize: '14px', lineHeight: '28px' }}>
                                             <div style={{ display: 'flex', justifyContent: 'end' }}>
-                                                Lock Days : {nftInfos ? nftInfos[i].periodValue : 0} days
+                                                Lock Days : {nftInfos && nftInfos[i] ? nftInfos[i].periodValue : 0} days
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'end' }}>
-                                                APR : {nftInfos ? Number(nftInfos[i].apr).toFixed(2) : 0}%
+                                                APR : {nftInfos && nftInfos[i] ? Number(nftInfos[i].apr).toFixed(2) : 0}%
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'end' }}>
-                                                Total Reward : {nftInfos ? Number(nftInfos[i].reward).toFixed(4) : 0} Bunny
+                                                Total Reward : {nftInfos && nftInfos[i] ? Number(nftInfos[i].reward).toFixed(4) : 0} Bunny
                                             </div>
-                                            <div style={{ display: 'flex', justifyContent: 'end', marginTop: '-5px', fontSize: '12px', fontWeight: '600', color: nftInfos && nftInfos.withdrawable ? '#00c851' : '#ff4444' }}>
-                                                {nftInfos && nftInfos.withdrawable ? 'Lock days is expired' : 'Lock days is not expired'}
+                                            <div style={{ display: 'flex', justifyContent: 'end', marginTop: '-5px', fontSize: '12px', fontWeight: '600', color: nftInfos && nftInfos[i] && nftInfos[i].withdrawable ? '#00c851' : '#ff4444' }}>
+                                                {nftInfos && nftInfos[i] && nftInfos[i].withdrawable ? 'Lock days is expired' : 'Lock days is not expired'}
                                             </div>
                                         </div>
                                     </div>
@@ -381,9 +381,11 @@ const Stake = () => {
                         )
                     }
 
-                    <div style={{ display: 'flex', justifyContent: 'end', color: 'white', width: '100%', marginTop: '20px', fontFamily: 'Chakra Petch' }}>
-                        Total Earnings : {Number(totalReward).toFixed(4)} Bunny
-                    </div>
+                    {
+                        stNfts.length > 0 ? <div style={{ display: 'flex', justifyContent: 'end', color: 'white', width: '100%', marginTop: '20px', fontFamily: 'Chakra Petch' }}>
+                            Total Earnings : {Number(totalReward).toFixed(4)} Bunny
+                        </div> : ''
+                    }
                 </div>
             </section>
             <footer data-w-id="1c6363c1-60a3-5681-8671-51603099bdca" style={{ opacity: 0 }} className="footer stake wf-section">

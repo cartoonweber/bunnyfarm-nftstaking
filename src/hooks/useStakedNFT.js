@@ -6,20 +6,20 @@ import { useState } from "react"
 
 const useStakedNFT = (provider, account, fetchNFTs, setFetchNfts) => {
     const [stakedTokens, setStakedTokens] = useState([])
-    const loadStakedNFT = async() => {
-            const signer = provider.getSigner()
-            const stakingContract = new ethers.Contract(CONFIG.STAKING_CONTRACT_ADDRESS, contractABI, signer)
-            const staked_Tokens = await stakingContract.getUserStakedTokens(account)
-            console.log(staked_Tokens);
-            setStakedTokens(staked_Tokens)
-            setFetchNfts(false)
+    const loadStakedNFT = async () => {
+        const signer = provider.getSigner()
+        const stakingContract = new ethers.Contract(CONFIG.STAKING_CONTRACT_ADDRESS, contractABI, signer)
+        const staked_Tokens = await stakingContract.getUserStakedTokens(account)
+        console.log(staked_Tokens);
+        setStakedTokens(staked_Tokens)
+        setFetchNfts(false)
     }
- 
-    useEffect(()=>{
-        if(fetchNFTs) {
+
+    useEffect(() => {
+        if (fetchNFTs) {
             loadStakedNFT()
         }
-        
+
     }, [account, fetchNFTs])
 
     return stakedTokens

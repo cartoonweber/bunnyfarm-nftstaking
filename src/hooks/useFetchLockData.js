@@ -82,7 +82,6 @@ const useFetchLockData = () => {
 
             const stakingInfo = await multicall(contractABI, calls);
 
-            console.log(stakingInfo);
 
             setInfos(stakingInfo);
 

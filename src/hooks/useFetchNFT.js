@@ -10,6 +10,7 @@ const useFetchNFT = (provider, account, fetchNFTs, setFetchNFTs) => {
             const signer = provider.getSigner()
             const nftContract = new ethers.Contract(CONFIG.NFT_CONTRACT, NFTABI, signer);
             const tokenids = await nftContract.walletOfOwner(account);
+            console.log(tokenids);
             let nft = { ownedNfts: [] };
             for (let i = 0; i < tokenids.length; i++) {
                 const id = tokenids[i] / 1;
